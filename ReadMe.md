@@ -1,5 +1,3 @@
 RunningLed
 
-tubjng
-
-mother fucker
+Written by tubjng
