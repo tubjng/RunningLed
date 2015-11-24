@@ -20,6 +20,7 @@
     CGFloat _balldiameter;
     NSTimer *_timer;
     int lastOnLED;
+     int _lastOnLEDLeft,_lastOnLEDRight,_lastOnLEDfreeLeft,_lastOnLEDfreeRight;
     int _tag;
 
 }
@@ -39,16 +40,47 @@
     //[self numberofballvsspace];
     //[self  placeGreyBallAtX:100 andY:100 withTag:1];
 }
+-(void) leftToRight
+{
+        NSLog(@"%d, %d",_lastOnLEDLeft,_lastOnLEDRight);
+    
+    if (_lastOnLEDRight==_lastOnLEDLeft+1 && _lastOnLEDRight!=0)
+    {
+        [_timer invalidate];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(freeStyle) userInfo:nil repeats:true];
+        
+    }
+    else
+    {
+        if (_lastOnLEDLeft != -1)
+        {
+            [self turnOffLed:_lastOnLEDLeft];
+        }
+        
+        if (_lastOnLEDLeft != _numberofball*_numberofballys - 1)
+        {
+            _lastOnLEDLeft++;
+        }
+        else
+        {
+            _lastOnLEDLeft = 0;
+            
+        }
+        [self turnOnLed:_lastOnLEDLeft];
+    }
+}
+
 -(void) runningled{
-    if (lastOnLED != -1) {
-        [self turnOffLed:lastOnLED];
-    }
-    if (lastOnLED!= _numberofball -1) {
-        lastOnLED++;
-    }else{
-        lastOnLED=0;
-    }
-    [self turnOnLed:lastOnLED];
+    [self leftToRight];
+//  if (lastOnLED != -1) {
+//    [self turnOffLed:lastOnLED];
+//    }
+//    if (lastOnLED!= _numberofball -1) {
+//        lastOnLED++;
+//    }else{
+//        lastOnLED=0;
+//    }
+//    [self turnOnLed:lastOnLED];
     
 }
 
@@ -112,14 +144,16 @@
        drawrowofbally: (int) numberbally{
     CGFloat spacex = [self spaceBetweenBallCenterWhenNumberBallIsKnown:numberballx];
     CGFloat spacey =[self spaceBetweenBallCenterWhenNumberBallIsKnown:numberbally];
-    for(int j=0;j<numberbally;j++){
-        for (int i=0; i<numberballx; i++) {
+    for(int j=0;j<numberbally;j++)
+    {
+        for (int i=0; i<numberballx; i++)
+        {
             _tag=_tag+1;
         [self placeGreyBallAtX:_margin+i*spacex
-                            andY:_margin+j*spacey+100
+                            andY:_margin+j*spacey
                         withTag:_tag+100];  //1 + 100 là gì. nó phải là i + 100. Nếu có thêm hàng cọt thì còn khác nữa
+        }
     }
-}
 }
 -(void) checksizeofapp{
     CGSize size= self.view.bounds.size;
